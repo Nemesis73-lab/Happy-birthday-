@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday in Space</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: black;
+      overflow: hidden;
+      font-family: "Poppins", sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .message {
+      position: relative;
+      top: 20vh;
+      font-size: 3rem;
+      font-weight: bold;
+      text-shadow: 0 0 20px #fff, 0 0 40px #0ff, 0 0 60px #0ff;
+      animation: fadeIn 4s ease-in-out;
+    }
+
+    .sub-message {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      color: #ddd;
+      animation: fadeIn 6s ease-in-out;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #0ff, #09f);
+      border: none;
+      border-radius: 25px;
+      color: black;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 0 20px #0ff;
+      transition: transform 0.3s;
+    }
+
+    .button:hover {
+      transform: scale(1.1);
+    }
+
+    .music-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+      cursor: pointer;
+      box-shadow: 0 0 10px #0ff;
+      font-size: 1.2rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+  
+  <div class="message">🌌 Happy Birthday, Captain! 🚀</div>
+  <div class="sub-message">Alles Gute zum Geburtstag, mein Stern ⭐</div>
+  <button class="button" onclick="showSurprise()">Open Your Space Gift 🎁</button>
+
+  <!-- Music controls -->
+  <button class="music-toggle" onclick="toggleMusic()">🎵</button>
+  <audio id="bg-music" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-scifi.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // --- Starfield Background ---
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    let w, h;
+
+    function init() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      stars = [];
+      for (let i = 0; i < 250; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          z: Math.random() * w
+        });
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "white";
+      for (let star of stars) {
+        star.z -= 2;
+        if (star.z <= 0) star.z = w;
+
+        let k = 128.0 / star.z;
+        let px = star.x * k + w / 2;
+        let py = star.y * k + h / 2;
+        if (px >= 0 && px <= w && py >= 0 && py <= h) {
+          let size = (1 - star.z / w) * 3;
+          ctx.beginPath();
+          ctx.arc(px, py, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', init);
+    init();
+    animate();
+
+    // --- Surprise Gift ---
+    function showSurprise() {
+      alert("🎉 Surprise! Du bist mein hellster Stern im Universum 🌟\n\nHappy Birthday! 🪐");
+    }
+
+    // --- Music Control ---
+    const music = document.getElementById("bg-music");
+    let isPlaying = false;
+
+    function toggleMusic() {
+      if (isPlaying) {
+        music.pause();
+      } else {
+        music.play();
+      }
+      isPlaying = !isPlaying;
+    }
+  </script>
+</body>
+</html>
